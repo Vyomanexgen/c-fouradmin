@@ -14,6 +14,7 @@ import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as CouponsRouteImport } from './routes/coupons'
+import { Route as ContentRouteImport } from './routes/content'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
@@ -45,6 +46,11 @@ const CustomersRoute = CustomersRouteImport.update({
 const CouponsRoute = CouponsRouteImport.update({
   id: '/coupons',
   path: '/coupons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentRoute = ContentRouteImport.update({
+  id: '/content',
+  path: '/content',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesRoute = CategoriesRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/categories': typeof CategoriesRoute
+  '/content': typeof ContentRoute
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/categories': typeof CategoriesRoute
+  '/content': typeof ContentRoute
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/categories': typeof CategoriesRoute
+  '/content': typeof ContentRoute
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/categories'
+    | '/content'
     | '/coupons'
     | '/customers'
     | '/inventory'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/categories'
+    | '/content'
     | '/coupons'
     | '/customers'
     | '/inventory'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analytics'
     | '/categories'
+    | '/content'
     | '/coupons'
     | '/customers'
     | '/inventory'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
   CategoriesRoute: typeof CategoriesRoute
+  ContentRoute: typeof ContentRoute
   CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
   InventoryRoute: typeof InventoryRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/coupons'
       fullPath: '/coupons'
       preLoaderRoute: typeof CouponsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content': {
+      id: '/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof ContentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categories': {
@@ -279,6 +299,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
   CategoriesRoute: CategoriesRoute,
+  ContentRoute: ContentRoute,
   CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
   InventoryRoute: InventoryRoute,
