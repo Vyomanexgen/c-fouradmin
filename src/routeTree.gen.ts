@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as CouponsRouteImport } from './routes/coupons'
@@ -24,6 +25,11 @@ import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 const ReviewsRoute = ReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingRoute = MarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/marketing': typeof MarketingRoute
   '/reviews': typeof ReviewsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/new': typeof ProductsNewRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/marketing': typeof MarketingRoute
   '/reviews': typeof ReviewsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/new': typeof ProductsNewRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/marketing': typeof MarketingRoute
   '/reviews': typeof ReviewsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/new': typeof ProductsNewRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/marketing'
     | '/reviews'
     | '/orders/$id'
     | '/products/new'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/marketing'
     | '/reviews'
     | '/orders/$id'
     | '/products/new'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/marketing'
     | '/reviews'
     | '/orders/$id'
     | '/products/new'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
   InventoryRoute: typeof InventoryRoute
+  MarketingRoute: typeof MarketingRoute
   ReviewsRoute: typeof ReviewsRoute
   OrdersIdRoute: typeof OrdersIdRoute
   ProductsNewRoute: typeof ProductsNewRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/reviews'
       fullPath: '/reviews'
       preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing': {
+      id: '/marketing'
+      path: '/marketing'
+      fullPath: '/marketing'
+      preLoaderRoute: typeof MarketingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
   InventoryRoute: InventoryRoute,
+  MarketingRoute: MarketingRoute,
   ReviewsRoute: ReviewsRoute,
   OrdersIdRoute: OrdersIdRoute,
   ProductsNewRoute: ProductsNewRoute,
