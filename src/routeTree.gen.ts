@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as CouponsRouteImport } from './routes/coupons'
@@ -19,6 +20,11 @@ import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as ProductsNewRouteImport } from './routes/products.new'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 
+const ReviewsRoute = ReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/reviews': typeof ReviewsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/new': typeof ProductsNewRoute
   '/orders/': typeof OrdersIndexRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/reviews': typeof ReviewsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/new': typeof ProductsNewRoute
   '/orders': typeof OrdersIndexRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/reviews': typeof ReviewsRoute
   '/orders/$id': typeof OrdersIdRoute
   '/products/new': typeof ProductsNewRoute
   '/orders/': typeof OrdersIndexRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/reviews'
     | '/orders/$id'
     | '/products/new'
     | '/orders/'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/reviews'
     | '/orders/$id'
     | '/products/new'
     | '/orders'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/reviews'
     | '/orders/$id'
     | '/products/new'
     | '/orders/'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
   InventoryRoute: typeof InventoryRoute
+  ReviewsRoute: typeof ReviewsRoute
   OrdersIdRoute: typeof OrdersIdRoute
   ProductsNewRoute: typeof ProductsNewRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
@@ -149,6 +162,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reviews': {
+      id: '/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inventory': {
       id: '/inventory'
       path: '/inventory'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
   InventoryRoute: InventoryRoute,
+  ReviewsRoute: ReviewsRoute,
   OrdersIdRoute: OrdersIdRoute,
   ProductsNewRoute: ProductsNewRoute,
   OrdersIndexRoute: OrdersIndexRoute,
