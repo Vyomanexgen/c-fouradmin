@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UsersRouteImport } from './routes/users'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketingRouteImport } from './routes/marketing'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as CustomersRouteImport } from './routes/customers'
@@ -38,6 +39,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const ReviewsRoute = ReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketingRoute = MarketingRouteImport.update({
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/reviews': typeof ReviewsRoute
   '/settings': typeof SettingsRoute
   '/users': typeof UsersRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/reviews': typeof ReviewsRoute
   '/settings': typeof SettingsRoute
   '/users': typeof UsersRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
   '/marketing': typeof MarketingRoute
+  '/notifications': typeof NotificationsRoute
   '/reviews': typeof ReviewsRoute
   '/settings': typeof SettingsRoute
   '/users': typeof UsersRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/customers'
     | '/inventory'
     | '/marketing'
+    | '/notifications'
     | '/reviews'
     | '/settings'
     | '/users'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/customers'
     | '/inventory'
     | '/marketing'
+    | '/notifications'
     | '/reviews'
     | '/settings'
     | '/users'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/customers'
     | '/inventory'
     | '/marketing'
+    | '/notifications'
     | '/reviews'
     | '/settings'
     | '/users'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   CustomersRoute: typeof CustomersRoute
   InventoryRoute: typeof InventoryRoute
   MarketingRoute: typeof MarketingRoute
+  NotificationsRoute: typeof NotificationsRoute
   ReviewsRoute: typeof ReviewsRoute
   SettingsRoute: typeof SettingsRoute
   UsersRoute: typeof UsersRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/reviews'
       fullPath: '/reviews'
       preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketing': {
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   CustomersRoute: CustomersRoute,
   InventoryRoute: InventoryRoute,
   MarketingRoute: MarketingRoute,
+  NotificationsRoute: NotificationsRoute,
   ReviewsRoute: ReviewsRoute,
   SettingsRoute: SettingsRoute,
   UsersRoute: UsersRoute,
