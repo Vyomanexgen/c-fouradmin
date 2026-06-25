@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, Download, UserPlus } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search, UserPlus } from "lucide-react";
 import { customers } from "@/lib/mock-data";
 import { PageHeader, SectionCard, StatusBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ExportMenu } from "@/components/export-menu";
 
 export const Route = createFileRoute("/customers")({
   head: () => ({ meta: [{ title: "Customers — Northwind Admin" }] }),
@@ -12,15 +14,36 @@ export const Route = createFileRoute("/customers")({
 });
 
 function CustomersPage() {
+  const [query, setQuery] = useState("");
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return customers;
+    return customers.filter((c) => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q));
+  }, [query]);
   return (
     <div className="mx-auto max-w-[1400px]">
       <PageHeader title="Customers" description={`${customers.length} customers`}
         actions={
           <>
-            <Button variant="outline" size="sm" className="h-9"><Download className="mr-1.5 h-4 w-4" />Export</Button>
+            <ExportMenu
+              rows={filtered}
+              columns={[
+                { key: "id", label: "ID" },
+                { key: "name", label: "Name" },
+                { key: "email", label: "Email" },
+                { key: "segment", label: "Segment" },
+                { key: "joined", label: "Joined" },
+                { key: "orders", label: "Orders" },
+                { key: "spent", label: "Total spent", format: (r) => `$${r.spent}` },
+                { key: "lastActive", label: "Last active" },
+              ]}
+              filename="customers"
+              title="Customers"
+            />
             <Button size="sm" className="h-9"><UserPlus className="mr-1.5 h-4 w-4" />Add customer</Button>
           </>
         } />
+
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
