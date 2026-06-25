@@ -1,4 +1,7 @@
 // Mock data for admin dashboard. Pure functions, no side effects.
+// Stable epoch so SSR and client renders match (avoid hydration drift).
+const BASE_EPOCH = Date.UTC(2026, 5, 25); // 2026-06-25
+
 
 export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled" | "returned" | "refunded";
 export type PaymentStatus = "paid" | "pending" | "failed" | "refunded";
