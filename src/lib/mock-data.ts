@@ -1,4 +1,7 @@
 // Mock data for admin dashboard. Pure functions, no side effects.
+// Stable epoch so SSR and client renders match (avoid hydration drift).
+const BASE_EPOCH = Date.UTC(2026, 5, 25); // 2026-06-25
+
 
 export type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled" | "returned" | "refunded";
 export type PaymentStatus = "paid" | "pending" | "failed" | "refunded";
@@ -114,7 +117,7 @@ export const orders: Order[] = Array.from({ length: 24 }, (_, i) => ({
   id: `#ORD-${4820 + i}`,
   customer: customerNames[i % customerNames.length],
   email: customerNames[i % customerNames.length].toLowerCase().replace(" ", ".") + "@mail.com",
-  date: new Date(Date.now() - i * 86400000 * 0.6).toISOString().slice(0, 10),
+  date: new Date(BASE_EPOCH - i * 86400000 * 0.6).toISOString().slice(0, 10),
   amount: 38 + ((i * 29) % 480),
   items: 1 + (i % 5),
   payment: payStatuses[i % payStatuses.length],
@@ -138,11 +141,11 @@ export const customers: Customer[] = customerNames.map((name, i) => ({
   id: `cus_${500 + i}`,
   name,
   email: name.toLowerCase().replace(" ", ".") + "@mail.com",
-  joined: new Date(Date.now() - (i + 4) * 86400000 * 14).toISOString().slice(0, 10),
+  joined: new Date(BASE_EPOCH - (i + 4) * 86400000 * 14).toISOString().slice(0, 10),
   orders: 1 + ((i * 3) % 28),
   spent: 80 + ((i * 137) % 4800),
   segment: segments[i % segments.length],
-  lastActive: new Date(Date.now() - i * 86400000 * 1.4).toISOString().slice(0, 10),
+  lastActive: new Date(BASE_EPOCH - i * 86400000 * 1.4).toISOString().slice(0, 10),
 }));
 
 export const coupons = [

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Plus, Search, Filter, Download, Star } from "lucide-react";
+import { Plus, Search, Filter, Star } from "lucide-react";
 import { products } from "@/lib/mock-data";
 import { PageHeader, SectionCard, StatusBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { ExportMenu } from "@/components/export-menu";
 
 export const Route = createFileRoute("/products/")({
   head: () => ({ meta: [{ title: "Products — Northwind Admin" }] }),
@@ -25,11 +26,28 @@ function ProductsPage() {
         description={`${products.length} products across 6 categories`}
         actions={
           <>
-            <Button variant="outline" size="sm" className="h-9"><Download className="mr-1.5 h-4 w-4" />Export</Button>
+            <ExportMenu
+              rows={products}
+              columns={[
+                { key: "id", label: "ID" },
+                { key: "name", label: "Name" },
+                { key: "sku", label: "SKU" },
+                { key: "category", label: "Category" },
+                { key: "price", label: "Price", format: (r) => `$${r.price}` },
+                { key: "salePrice", label: "Sale price", format: (r) => (r.salePrice ? `$${r.salePrice}` : "") },
+                { key: "stock", label: "Stock" },
+                { key: "status", label: "Status" },
+                { key: "rating", label: "Rating", format: (r) => r.rating.toFixed(2) },
+                { key: "sales", label: "Sales" },
+              ]}
+              filename="products"
+              title="Products"
+            />
             <Button asChild size="sm" className="h-9"><Link to="/products/new"><Plus className="mr-1.5 h-4 w-4" />Add product</Link></Button>
           </>
         }
       />
+
 
       <SectionCard title="All products" description="Manage your catalog">
         <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_auto_auto]">

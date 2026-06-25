@@ -1,7 +1,6 @@
 import { Bell, Search, Plus, Moon, Sun, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,7 +8,9 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@tanstack/react-router";
-import { notifications } from "@/lib/mock-data";
+import { GlobalSearch, useGlobalSearchController } from "@/components/global-search";
+import { notificationsApi, startRealtimeSimulator, useNotifications } from "@/lib/realtime-store";
+import { toast } from "sonner";
 
 export function TopBar() {
   const [dark, setDark] = useState(false);
@@ -17,21 +18,52 @@ export function TopBar() {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
 
+  const notifications = useNotifications();
   const unread = notifications.filter((n) => n.unread).length;
+  const searchCtx = useGlobalSearchController();
+
+  // Boot realtime simulator + toast new notifications.
+  useEffect(() => {
+    startRealtimeSimulator();
+  }, []);
+  useEffect(() => {
+    const seen = new Set(notifications.map((n) => n.id));
+    const unsub = (function attach() {
+      // Simple diff via subscription tick: when notifications change, toast newest unread.
+      const last = notifications[0];
+      if (last && last.unread && last.time === "just now") {
+        toast(last.title, { description: last.desc });
+      }
+      seen.clear();
+      return () => undefined;
+    })();
+    return unsub;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notifications.length]);
 
   return (
     <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-md sm:px-4">
       <SidebarTrigger className="-ml-1" />
-      <div className="relative hidden flex-1 max-w-md md:block">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search orders, products, customers…"
-          className="h-9 pl-8 bg-secondary/60 border-transparent focus-visible:bg-background"
-        />
-        <kbd className="pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] text-muted-foreground sm:flex">
+      <button
+        type="button"
+        onClick={() => searchCtx.setOpen(true)}
+        className="relative hidden h-9 w-full max-w-md items-center gap-2 rounded-md border border-transparent bg-secondary/60 px-3 text-left text-sm text-muted-foreground transition hover:bg-secondary md:flex"
+      >
+        <Search className="h-4 w-4" />
+        <span className="flex-1 truncate">Search orders, products, customers…</span>
+        <kbd className="pointer-events-none hidden select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] text-muted-foreground sm:flex">
           ⌘K
         </kbd>
-      </div>
+      </button>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden h-9 w-9"
+        onClick={() => searchCtx.setOpen(true)}
+        aria-label="Search"
+      >
+        <Search className="h-4 w-4" />
+      </Button>
       <div className="ml-auto flex items-center gap-1.5">
         <Button asChild size="sm" className="hidden h-9 gap-1.5 sm:inline-flex">
           <Link to="/products/new">
@@ -59,7 +91,15 @@ export function TopBar() {
           <DropdownMenuContent align="end" className="w-80">
             <DropdownMenuLabel className="flex items-center justify-between">
               Notifications
-              <Badge variant="secondary" className="text-xs">{unread} new</Badge>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-xs">{unread} new</Badge>
+                <button
+                  className="text-[11px] text-primary hover:underline"
+                  onClick={() => notificationsApi.markAllRead()}
+                >
+                  Mark all read
+                </button>
+              </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {notifications.slice(0, 5).map((n) => (
@@ -93,11 +133,13 @@ export function TopBar() {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild><Link to="/settings">Account settings</Link></DropdownMenuItem>
             <DropdownMenuItem asChild><Link to="/users">Team & roles</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link to="/audit-logs">Audit logs</Link></DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive">Sign out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <GlobalSearch ctx={searchCtx} />
     </header>
   );
 }

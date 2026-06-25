@@ -2,8 +2,9 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Package, Tags, ShoppingCart, Users, Boxes,
   Ticket, Star, BarChart3, Megaphone, FileText, Settings,
-  ShieldCheck, Bell, Store,
+  ShieldCheck, Bell, Store, ScrollText,
 } from "lucide-react";
+
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter,
@@ -46,10 +47,12 @@ const sections: { label: string; items: { title: string; url: string; icon: type
     label: "System",
     items: [
       { title: "Admin Users", url: "/users", icon: ShieldCheck },
+      { title: "Audit Logs", url: "/audit-logs", icon: ScrollText },
       { title: "Settings", url: "/settings", icon: Settings },
     ],
   },
 ];
+
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
