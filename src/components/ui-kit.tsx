@@ -53,7 +53,8 @@ export function KpiCard({
 
 export function SectionCard({
   title, description, action, children, className,
-}: { title: string; description?: string; action?: ReactNode; children: ReactNode; className?: string }) {
+}: { title: string; description?: ReactNode; action?: ReactNode; children: ReactNode; className?: string }) {
+
   return (
     <div className={cn("rounded-xl border border-border bg-card shadow-[var(--shadow-elegant)]", className)}>
       <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
