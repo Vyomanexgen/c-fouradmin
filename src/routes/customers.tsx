@@ -62,7 +62,12 @@ function CustomersPage() {
       <SectionCard title="All customers" className="mt-6">
         <div className="relative mb-4 max-w-sm">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Search customers…" className="h-9 pl-8" />
+          <Input
+            placeholder="Search customers…"
+            className="h-9 pl-8"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
         </div>
         <div className="overflow-x-auto">
           <Table>
@@ -77,7 +82,8 @@ function CustomersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers.map((c) => (
+              {filtered.map((c) => (
+
                 <TableRow key={c.id} className="hover:bg-muted/40">
                   <TableCell>
                     <div className="flex items-center gap-3">
