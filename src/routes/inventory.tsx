@@ -5,6 +5,8 @@ import { KpiCard, PageHeader, SectionCard } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
+import { ExportMenu } from "@/components/export-menu";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/inventory")({
   head: () => ({ meta: [{ title: "Inventory — Northwind Admin" }] }),
@@ -18,8 +20,30 @@ function InventoryPage() {
 
   return (
     <div className="mx-auto max-w-[1400px]">
-      <PageHeader title="Inventory" description="Monitor stock levels and adjust quantities"
-        actions={<><Button variant="outline" size="sm"><ArrowUpFromLine className="mr-1.5 h-4 w-4" />Receive stock</Button><Button size="sm"><ArrowDownToLine className="mr-1.5 h-4 w-4" />Adjust</Button></>} />
+      <PageHeader
+        title="Inventory"
+        description="Monitor stock levels and adjust quantities"
+        actions={
+          <>
+            <ExportMenu
+              rows={inventoryAlerts}
+              columns={[
+                { key: "name", label: "Product" },
+                { key: "sku", label: "SKU" },
+                { key: "category", label: "Category" },
+                { key: "stock", label: "Current stock" },
+                { key: "reorder", label: "Reorder at" },
+                { key: "incoming", label: "Incoming" },
+              ]}
+              filename="inventory-alerts"
+              title="Inventory alerts"
+              label="Export alerts"
+            />
+            <Button variant="outline" size="sm"><ArrowUpFromLine className="mr-1.5 h-4 w-4" />Receive stock</Button>
+            <Button size="sm"><ArrowDownToLine className="mr-1.5 h-4 w-4" />Adjust</Button>
+          </>
+        }
+      />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="In stock" value={inCount} icon={ArrowUpFromLine} />
@@ -28,7 +52,18 @@ function InventoryPage() {
         <KpiCard label="Total SKUs" value={products.length} icon={ArrowDownToLine} />
       </div>
 
-      <SectionCard title="Inventory alerts" description="Items at or below reorder point" className="mt-6">
+      <SectionCard
+        title="Inventory alerts"
+        description="Items at or below reorder point"
+        className="mt-6"
+      >
+        <div className="mb-3 flex items-center gap-2">
+          <Badge variant="secondary" className="gap-1">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+            Live monitoring
+          </Badge>
+          <span className="text-xs text-muted-foreground">New alerts surface automatically.</span>
+        </div>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>

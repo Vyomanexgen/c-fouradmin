@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { notifications } from "@/lib/mock-data";
 import { PageHeader, SectionCard } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, AlertTriangle, CreditCard, MessageSquare, RefreshCw } from "lucide-react";
+import { ShoppingCart, AlertTriangle, CreditCard, MessageSquare, RefreshCw, Bell } from "lucide-react";
+import { notificationsApi, useNotifications } from "@/lib/realtime-store";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/notifications")({
   head: () => ({ meta: [{ title: "Notifications — Northwind Admin" }] }),
@@ -15,15 +16,36 @@ const iconMap = {
   payment: CreditCard,
   message: MessageSquare,
   refund: RefreshCw,
+  system: Bell,
 } as const;
 
 function NotificationsPage() {
+  const notifications = useNotifications();
+  const unread = notifications.filter((n) => n.unread).length;
   return (
     <div className="mx-auto max-w-[900px]">
-      <PageHeader title="Notifications" description="Recent activity across your store"
-        actions={<Button variant="outline" size="sm">Mark all as read</Button>} />
+      <PageHeader
+        title="Notifications"
+        description="Recent activity across your store — updates in real-time."
+        actions={
+          <Button variant="outline" size="sm" onClick={() => notificationsApi.markAllRead()}>
+            Mark all as read
+          </Button>
+        }
+      />
 
-      <SectionCard title="All notifications">
+      <SectionCard
+        title="All notifications"
+        description={
+          <span className="flex items-center gap-2">
+            <Badge variant="secondary" className="gap-1">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              Live
+            </Badge>
+            {unread} unread of {notifications.length}
+          </span>
+        }
+      >
         <div className="divide-y divide-border">
           {notifications.map((n) => {
             const Icon = iconMap[n.type as keyof typeof iconMap] ?? ShoppingCart;
