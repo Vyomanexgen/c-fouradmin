@@ -39,6 +39,7 @@ function OrdersPage() {
         actions={
           <ExportMenu
             rows={filtered}
+            allRows={orders}
             columns={[
               { key: "id", label: "Order ID" },
               { key: "customer", label: "Customer" },
@@ -51,7 +52,9 @@ function OrdersPage() {
             ]}
             filename="orders"
             title="Orders"
+            dateKey="date"
           />
+
         }
       />
 
