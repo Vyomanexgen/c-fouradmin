@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { products, customers, inventoryAlerts, categories as _cats } from "@/lib/mock-data";
+import { products, customers, inventoryAlerts } from "@/lib/mock-data";
 import { useOrders } from "@/lib/realtime-store";
 import {
   Search, Package, ShoppingCart, Users, AlertTriangle, LayoutDashboard, BarChart3,
