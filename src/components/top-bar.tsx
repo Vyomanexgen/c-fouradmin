@@ -1,5 +1,5 @@
 import { Bell, Search, Plus, Moon, Sun, HelpCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@tanstack/react-router";
 import { GlobalSearch, useGlobalSearchController } from "@/components/global-search";
-import { notificationsApi, startRealtimeSimulator, useNotifications } from "@/lib/realtime-store";
+import {
+  notificationsApi, shouldShowToast, startRealtimeSimulator, useNotifications,
+} from "@/lib/realtime-store";
 import { toast } from "sonner";
 
 export function TopBar() {
@@ -21,25 +23,25 @@ export function TopBar() {
   const notifications = useNotifications();
   const unread = notifications.filter((n) => n.unread).length;
   const searchCtx = useGlobalSearchController();
+  const initialized = useRef(false);
 
-  // Boot realtime simulator + toast new notifications.
   useEffect(() => {
     startRealtimeSimulator();
   }, []);
+
+  // Toast freshly added notifications, deduped persistently by event id.
   useEffect(() => {
-    const seen = new Set(notifications.map((n) => n.id));
-    const unsub = (function attach() {
-      // Simple diff via subscription tick: when notifications change, toast newest unread.
-      const last = notifications[0];
-      if (last && last.unread && last.time === "just now") {
-        toast(last.title, { description: last.desc });
-      }
-      seen.clear();
-      return () => undefined;
-    })();
-    return unsub;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notifications.length]);
+    if (!initialized.current) {
+      // Don't toast the seed batch on first render. Mark them as seen.
+      notifications.forEach((n) => shouldShowToast(n.id));
+      initialized.current = true;
+      return;
+    }
+    const latest = notifications[0];
+    if (latest && latest.unread && shouldShowToast(latest.id)) {
+      toast(latest.title, { description: latest.desc, id: latest.id });
+    }
+  }, [notifications]);
 
   return (
     <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur-md sm:px-4">
@@ -103,7 +105,11 @@ export function TopBar() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {notifications.slice(0, 5).map((n) => (
-              <DropdownMenuItem key={n.id} className="flex flex-col items-start gap-0.5 py-2">
+              <DropdownMenuItem
+                key={n.id}
+                className="flex flex-col items-start gap-0.5 py-2"
+                onClick={() => notificationsApi.markRead(n.id)}
+              >
                 <div className="flex w-full items-center justify-between gap-2">
                   <span className="text-sm font-medium">{n.title}</span>
                   <span className="text-[10px] text-muted-foreground">{n.time}</span>
