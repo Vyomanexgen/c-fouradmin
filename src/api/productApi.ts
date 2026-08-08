@@ -72,27 +72,27 @@ export interface GetProductsParams {
 }
 
 export const getProducts = async (params?: GetProductsParams) => {
-  const response = await apiClient.get("/api/v1/storefront/admin/products", { params });
+  const response = await apiClient.get("/api/v1/admin/catalog/products", { params });
   return response.data?.data || response.data;
 };
 
 export const getProductById = async (id: string) => {
-  const response = await apiClient.get(`/api/v1/storefront/admin/products/${id}`);
+  const response = await apiClient.get(`/api/v1/admin/catalog/products/${id}`);
   return response.data?.data || response.data;
 };
 
 export const createProduct = async (payload: CreateProductPayload) => {
-  const response = await apiClient.post("/api/v1/storefront/admin/products", payload);
+  const response = await apiClient.post("/api/v1/admin/catalog/products", payload);
   return response.data;
 };
 
 export const updateProduct = async (id: string, payload: Partial<CreateProductPayload>) => {
-  const response = await apiClient.put(`/api/v1/storefront/admin/products/${id}`, payload);
+  const response = await apiClient.put(`/api/v1/admin/catalog/products/${id}`, payload);
   return response.data;
 };
 
 export const deleteProduct = async (id: string) => {
-  const response = await apiClient.delete(`/api/v1/storefront/admin/products/${id}`);
+  const response = await apiClient.delete(`/api/v1/admin/catalog/products/${id}`);
   return response.data;
 };
 
@@ -103,16 +103,16 @@ export interface CreateVariantPayload extends Variant {
 }
 
 export const createVariant = async (payload: CreateVariantPayload) => {
-  const response = await apiClient.post("/api/v1/storefront/admin/variants", payload);
+  const response = await apiClient.post("/api/v1/admin/catalog/variants", payload);
   return response.data;
 };
 
 export const updateVariant = async (id: string, payload: Partial<CreateVariantPayload>) => {
-  const response = await apiClient.put(`/api/v1/storefront/admin/variants/${id}`, payload);
+  const response = await apiClient.put(`/api/v1/admin/catalog/variants/${id}`, payload);
   return response.data;
 };
 
 export const deleteVariant = async (id: string) => {
-  const response = await apiClient.delete(`/api/v1/storefront/admin/variants/${id}`);
+  const response = await apiClient.delete(`/api/v1/admin/catalog/variants/${id}`);
   return response.data;
 };

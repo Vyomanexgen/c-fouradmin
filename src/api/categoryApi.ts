@@ -17,21 +17,21 @@ export interface CategoryResponse extends CategoryPayload {
 }
 
 export const getCategories = async (params?: { parentId?: string; q?: string; page?: number; limit?: number }): Promise<{ categories: CategoryResponse[], pagination: any }> => {
-  const response = await apiClient.get("/api/v1/storefront/admin/categories", { params });
+  const response = await apiClient.get("/api/v1/admin/catalog/categories", { params });
   return response.data?.data || response.data;
 };
 
 export const createCategory = async (payload: CategoryPayload) => {
-  const response = await apiClient.post("/api/v1/storefront/admin/categories", payload);
+  const response = await apiClient.post("/api/v1/admin/catalog/categories", payload);
   return response.data;
 };
 
 export const updateCategory = async (id: string, payload: Partial<CategoryPayload>) => {
-  const response = await apiClient.put(`/api/v1/storefront/admin/categories/${id}`, payload);
+  const response = await apiClient.put(`/api/v1/admin/catalog/categories/${id}`, payload);
   return response.data;
 };
 
 export const deleteCategory = async (id: string) => {
-  const response = await apiClient.delete(`/api/v1/storefront/admin/categories/${id}`);
+  const response = await apiClient.delete(`/api/v1/admin/catalog/categories/${id}`);
   return response.data;
 };

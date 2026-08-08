@@ -52,4 +52,5 @@ Thumbs.db
 
 # Lovable Configs & Unwanted Folders
 AGENTS.md
+.lovable/
 mdfiles/
