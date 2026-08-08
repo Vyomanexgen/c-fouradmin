@@ -10,26 +10,44 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UsersRouteImport } from './routes/users'
+import { Route as StorefrontConfigRouteImport } from './routes/storefront-config'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ReviewsRouteImport } from './routes/reviews'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MarketingRouteImport } from './routes/marketing'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as CustomersRouteImport } from './routes/customers'
-import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as ContentRouteImport } from './routes/content'
+import { Route as ContactInquiriesRouteImport } from './routes/contact-inquiries'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as AuditLogsRouteImport } from './routes/audit-logs'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
+import { Route as CouponsIndexRouteImport } from './routes/coupons.index'
+import { Route as RolesNewRouteImport } from './routes/roles_.new'
+import { Route as RolesIdRouteImport } from './routes/roles_.$id'
 import { Route as ProductsNewRouteImport } from './routes/products.new'
+import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as MarketingNewRouteImport } from './routes/marketing_.new'
+import { Route as MarketingIdRouteImport } from './routes/marketing_.$id'
+import { Route as CouponsNewRouteImport } from './routes/coupons_.new'
+import { Route as ContentNewRouteImport } from './routes/content_.new'
+import { Route as ContentIdRouteImport } from './routes/content_.$id'
+import { Route as BannersNewRouteImport } from './routes/banners_.new'
+import { Route as BannersIdRouteImport } from './routes/banners_.$id'
 
 const UsersRoute = UsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StorefrontConfigRoute = StorefrontConfigRouteImport.update({
+  id: '/storefront-config',
+  path: '/storefront-config',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -52,6 +70,11 @@ const MarketingRoute = MarketingRouteImport.update({
   path: '/marketing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -62,14 +85,14 @@ const CustomersRoute = CustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CouponsRoute = CouponsRouteImport.update({
-  id: '/coupons',
-  path: '/coupons',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ContentRoute = ContentRouteImport.update({
   id: '/content',
   path: '/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactInquiriesRoute = ContactInquiriesRouteImport.update({
+  id: '/contact-inquiries',
+  path: '/contact-inquiries',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesRoute = CategoriesRouteImport.update({
@@ -102,14 +125,69 @@ const OrdersIndexRoute = OrdersIndexRouteImport.update({
   path: '/orders/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CouponsIndexRoute = CouponsIndexRouteImport.update({
+  id: '/coupons/',
+  path: '/coupons/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RolesNewRoute = RolesNewRouteImport.update({
+  id: '/roles_/new',
+  path: '/roles/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RolesIdRoute = RolesIdRouteImport.update({
+  id: '/roles_/$id',
+  path: '/roles/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsNewRoute = ProductsNewRouteImport.update({
   id: '/products/new',
   path: '/products/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsIdRoute = ProductsIdRouteImport.update({
+  id: '/products/$id',
+  path: '/products/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrdersIdRoute = OrdersIdRouteImport.update({
   id: '/orders/$id',
   path: '/orders/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingNewRoute = MarketingNewRouteImport.update({
+  id: '/marketing_/new',
+  path: '/marketing/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingIdRoute = MarketingIdRouteImport.update({
+  id: '/marketing_/$id',
+  path: '/marketing/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CouponsNewRoute = CouponsNewRouteImport.update({
+  id: '/coupons_/new',
+  path: '/coupons/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentNewRoute = ContentNewRouteImport.update({
+  id: '/content_/new',
+  path: '/content/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentIdRoute = ContentIdRouteImport.update({
+  id: '/content_/$id',
+  path: '/content/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BannersNewRoute = BannersNewRouteImport.update({
+  id: '/banners_/new',
+  path: '/banners/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BannersIdRoute = BannersIdRouteImport.update({
+  id: '/banners_/$id',
+  path: '/banners/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -118,17 +196,30 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AnalyticsRoute
   '/audit-logs': typeof AuditLogsRoute
   '/categories': typeof CategoriesRoute
+  '/contact-inquiries': typeof ContactInquiriesRoute
   '/content': typeof ContentRoute
-  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/login': typeof LoginRoute
   '/marketing': typeof MarketingRoute
   '/notifications': typeof NotificationsRoute
   '/reviews': typeof ReviewsRoute
   '/settings': typeof SettingsRoute
+  '/storefront-config': typeof StorefrontConfigRoute
   '/users': typeof UsersRoute
+  '/banners/$id': typeof BannersIdRoute
+  '/banners/new': typeof BannersNewRoute
+  '/content/$id': typeof ContentIdRoute
+  '/content/new': typeof ContentNewRoute
+  '/coupons/new': typeof CouponsNewRoute
+  '/marketing/$id': typeof MarketingIdRoute
+  '/marketing/new': typeof MarketingNewRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
   '/products/new': typeof ProductsNewRoute
+  '/roles/$id': typeof RolesIdRoute
+  '/roles/new': typeof RolesNewRoute
+  '/coupons/': typeof CouponsIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/products/': typeof ProductsIndexRoute
 }
@@ -137,17 +228,30 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/audit-logs': typeof AuditLogsRoute
   '/categories': typeof CategoriesRoute
+  '/contact-inquiries': typeof ContactInquiriesRoute
   '/content': typeof ContentRoute
-  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/login': typeof LoginRoute
   '/marketing': typeof MarketingRoute
   '/notifications': typeof NotificationsRoute
   '/reviews': typeof ReviewsRoute
   '/settings': typeof SettingsRoute
+  '/storefront-config': typeof StorefrontConfigRoute
   '/users': typeof UsersRoute
+  '/banners/$id': typeof BannersIdRoute
+  '/banners/new': typeof BannersNewRoute
+  '/content/$id': typeof ContentIdRoute
+  '/content/new': typeof ContentNewRoute
+  '/coupons/new': typeof CouponsNewRoute
+  '/marketing/$id': typeof MarketingIdRoute
+  '/marketing/new': typeof MarketingNewRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
   '/products/new': typeof ProductsNewRoute
+  '/roles/$id': typeof RolesIdRoute
+  '/roles/new': typeof RolesNewRoute
+  '/coupons': typeof CouponsIndexRoute
   '/orders': typeof OrdersIndexRoute
   '/products': typeof ProductsIndexRoute
 }
@@ -157,17 +261,30 @@ export interface FileRoutesById {
   '/analytics': typeof AnalyticsRoute
   '/audit-logs': typeof AuditLogsRoute
   '/categories': typeof CategoriesRoute
+  '/contact-inquiries': typeof ContactInquiriesRoute
   '/content': typeof ContentRoute
-  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/inventory': typeof InventoryRoute
+  '/login': typeof LoginRoute
   '/marketing': typeof MarketingRoute
   '/notifications': typeof NotificationsRoute
   '/reviews': typeof ReviewsRoute
   '/settings': typeof SettingsRoute
+  '/storefront-config': typeof StorefrontConfigRoute
   '/users': typeof UsersRoute
+  '/banners_/$id': typeof BannersIdRoute
+  '/banners_/new': typeof BannersNewRoute
+  '/content_/$id': typeof ContentIdRoute
+  '/content_/new': typeof ContentNewRoute
+  '/coupons_/new': typeof CouponsNewRoute
+  '/marketing_/$id': typeof MarketingIdRoute
+  '/marketing_/new': typeof MarketingNewRoute
   '/orders/$id': typeof OrdersIdRoute
+  '/products/$id': typeof ProductsIdRoute
   '/products/new': typeof ProductsNewRoute
+  '/roles_/$id': typeof RolesIdRoute
+  '/roles_/new': typeof RolesNewRoute
+  '/coupons/': typeof CouponsIndexRoute
   '/orders/': typeof OrdersIndexRoute
   '/products/': typeof ProductsIndexRoute
 }
@@ -178,17 +295,30 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/audit-logs'
     | '/categories'
+    | '/contact-inquiries'
     | '/content'
-    | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/login'
     | '/marketing'
     | '/notifications'
     | '/reviews'
     | '/settings'
+    | '/storefront-config'
     | '/users'
+    | '/banners/$id'
+    | '/banners/new'
+    | '/content/$id'
+    | '/content/new'
+    | '/coupons/new'
+    | '/marketing/$id'
+    | '/marketing/new'
     | '/orders/$id'
+    | '/products/$id'
     | '/products/new'
+    | '/roles/$id'
+    | '/roles/new'
+    | '/coupons/'
     | '/orders/'
     | '/products/'
   fileRoutesByTo: FileRoutesByTo
@@ -197,17 +327,30 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/audit-logs'
     | '/categories'
+    | '/contact-inquiries'
     | '/content'
-    | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/login'
     | '/marketing'
     | '/notifications'
     | '/reviews'
     | '/settings'
+    | '/storefront-config'
     | '/users'
+    | '/banners/$id'
+    | '/banners/new'
+    | '/content/$id'
+    | '/content/new'
+    | '/coupons/new'
+    | '/marketing/$id'
+    | '/marketing/new'
     | '/orders/$id'
+    | '/products/$id'
     | '/products/new'
+    | '/roles/$id'
+    | '/roles/new'
+    | '/coupons'
     | '/orders'
     | '/products'
   id:
@@ -216,17 +359,30 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/audit-logs'
     | '/categories'
+    | '/contact-inquiries'
     | '/content'
-    | '/coupons'
     | '/customers'
     | '/inventory'
+    | '/login'
     | '/marketing'
     | '/notifications'
     | '/reviews'
     | '/settings'
+    | '/storefront-config'
     | '/users'
+    | '/banners_/$id'
+    | '/banners_/new'
+    | '/content_/$id'
+    | '/content_/new'
+    | '/coupons_/new'
+    | '/marketing_/$id'
+    | '/marketing_/new'
     | '/orders/$id'
+    | '/products/$id'
     | '/products/new'
+    | '/roles_/$id'
+    | '/roles_/new'
+    | '/coupons/'
     | '/orders/'
     | '/products/'
   fileRoutesById: FileRoutesById
@@ -236,17 +392,30 @@ export interface RootRouteChildren {
   AnalyticsRoute: typeof AnalyticsRoute
   AuditLogsRoute: typeof AuditLogsRoute
   CategoriesRoute: typeof CategoriesRoute
+  ContactInquiriesRoute: typeof ContactInquiriesRoute
   ContentRoute: typeof ContentRoute
-  CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
   InventoryRoute: typeof InventoryRoute
+  LoginRoute: typeof LoginRoute
   MarketingRoute: typeof MarketingRoute
   NotificationsRoute: typeof NotificationsRoute
   ReviewsRoute: typeof ReviewsRoute
   SettingsRoute: typeof SettingsRoute
+  StorefrontConfigRoute: typeof StorefrontConfigRoute
   UsersRoute: typeof UsersRoute
+  BannersIdRoute: typeof BannersIdRoute
+  BannersNewRoute: typeof BannersNewRoute
+  ContentIdRoute: typeof ContentIdRoute
+  ContentNewRoute: typeof ContentNewRoute
+  CouponsNewRoute: typeof CouponsNewRoute
+  MarketingIdRoute: typeof MarketingIdRoute
+  MarketingNewRoute: typeof MarketingNewRoute
   OrdersIdRoute: typeof OrdersIdRoute
+  ProductsIdRoute: typeof ProductsIdRoute
   ProductsNewRoute: typeof ProductsNewRoute
+  RolesIdRoute: typeof RolesIdRoute
+  RolesNewRoute: typeof RolesNewRoute
+  CouponsIndexRoute: typeof CouponsIndexRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
 }
@@ -258,6 +427,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof UsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/storefront-config': {
+      id: '/storefront-config'
+      path: '/storefront-config'
+      fullPath: '/storefront-config'
+      preLoaderRoute: typeof StorefrontConfigRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -288,6 +464,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inventory': {
       id: '/inventory'
       path: '/inventory'
@@ -302,18 +485,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/coupons': {
-      id: '/coupons'
-      path: '/coupons'
-      fullPath: '/coupons'
-      preLoaderRoute: typeof CouponsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/content': {
       id: '/content'
       path: '/content'
       fullPath: '/content'
       preLoaderRoute: typeof ContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-inquiries': {
+      id: '/contact-inquiries'
+      path: '/contact-inquiries'
+      fullPath: '/contact-inquiries'
+      preLoaderRoute: typeof ContactInquiriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categories': {
@@ -358,6 +541,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrdersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/coupons/': {
+      id: '/coupons/'
+      path: '/coupons'
+      fullPath: '/coupons/'
+      preLoaderRoute: typeof CouponsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/roles_/new': {
+      id: '/roles_/new'
+      path: '/roles/new'
+      fullPath: '/roles/new'
+      preLoaderRoute: typeof RolesNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/roles_/$id': {
+      id: '/roles_/$id'
+      path: '/roles/$id'
+      fullPath: '/roles/$id'
+      preLoaderRoute: typeof RolesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/new': {
       id: '/products/new'
       path: '/products/new'
@@ -365,11 +569,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/$id': {
+      id: '/products/$id'
+      path: '/products/$id'
+      fullPath: '/products/$id'
+      preLoaderRoute: typeof ProductsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orders/$id': {
       id: '/orders/$id'
       path: '/orders/$id'
       fullPath: '/orders/$id'
       preLoaderRoute: typeof OrdersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing_/new': {
+      id: '/marketing_/new'
+      path: '/marketing/new'
+      fullPath: '/marketing/new'
+      preLoaderRoute: typeof MarketingNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing_/$id': {
+      id: '/marketing_/$id'
+      path: '/marketing/$id'
+      fullPath: '/marketing/$id'
+      preLoaderRoute: typeof MarketingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coupons_/new': {
+      id: '/coupons_/new'
+      path: '/coupons/new'
+      fullPath: '/coupons/new'
+      preLoaderRoute: typeof CouponsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content_/new': {
+      id: '/content_/new'
+      path: '/content/new'
+      fullPath: '/content/new'
+      preLoaderRoute: typeof ContentNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content_/$id': {
+      id: '/content_/$id'
+      path: '/content/$id'
+      fullPath: '/content/$id'
+      preLoaderRoute: typeof ContentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/banners_/new': {
+      id: '/banners_/new'
+      path: '/banners/new'
+      fullPath: '/banners/new'
+      preLoaderRoute: typeof BannersNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/banners_/$id': {
+      id: '/banners_/$id'
+      path: '/banners/$id'
+      fullPath: '/banners/$id'
+      preLoaderRoute: typeof BannersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -380,20 +640,43 @@ const rootRouteChildren: RootRouteChildren = {
   AnalyticsRoute: AnalyticsRoute,
   AuditLogsRoute: AuditLogsRoute,
   CategoriesRoute: CategoriesRoute,
+  ContactInquiriesRoute: ContactInquiriesRoute,
   ContentRoute: ContentRoute,
-  CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
   InventoryRoute: InventoryRoute,
+  LoginRoute: LoginRoute,
   MarketingRoute: MarketingRoute,
   NotificationsRoute: NotificationsRoute,
   ReviewsRoute: ReviewsRoute,
   SettingsRoute: SettingsRoute,
+  StorefrontConfigRoute: StorefrontConfigRoute,
   UsersRoute: UsersRoute,
+  BannersIdRoute: BannersIdRoute,
+  BannersNewRoute: BannersNewRoute,
+  ContentIdRoute: ContentIdRoute,
+  ContentNewRoute: ContentNewRoute,
+  CouponsNewRoute: CouponsNewRoute,
+  MarketingIdRoute: MarketingIdRoute,
+  MarketingNewRoute: MarketingNewRoute,
   OrdersIdRoute: OrdersIdRoute,
+  ProductsIdRoute: ProductsIdRoute,
   ProductsNewRoute: ProductsNewRoute,
+  RolesIdRoute: RolesIdRoute,
+  RolesNewRoute: RolesNewRoute,
+  CouponsIndexRoute: CouponsIndexRoute,
   OrdersIndexRoute: OrdersIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

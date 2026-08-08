@@ -9,38 +9,64 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@tanstack/react-router";
 import { GlobalSearch, useGlobalSearchController } from "@/components/global-search";
-import {
-  notificationsApi, shouldShowToast, startRealtimeSimulator, useNotifications,
-} from "@/lib/realtime-store";
 import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { notificationApi, NotificationItem } from "@/api/notificationApi";
 
 export function TopBar() {
+  const { user, logout } = useAuth();
   const [dark, setDark] = useState(false);
+  const queryClient = useQueryClient();
+  
+  const name = user ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email?.split("@")[0] || "Admin" : "Admin";
+  const email = user?.email || "";
+  const initials = user
+    ? ((user.firstName?.[0] || "") + (user.lastName?.[0] || "")).toUpperCase() || user.email?.[0]?.toUpperCase() || "A"
+    : "A";
+
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
 
-  const notifications = useNotifications();
-  const unread = notifications.filter((n) => n.unread).length;
+  const { data } = useQuery({
+    queryKey: ["notifications", undefined], // Match the general list for the badge
+    queryFn: () => notificationApi.getNotifications(),
+    refetchInterval: 30000,
+  });
+
+  const notifications = data?.data || [];
+  const unread = data?.unreadCount || 0;
+
+  const markAsReadMut = useMutation({
+    mutationFn: notificationApi.markAsRead,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+  });
+
+  const markAllReadMut = useMutation({
+    mutationFn: notificationApi.markAllAsRead,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+  });
+
   const searchCtx = useGlobalSearchController();
-  const initialized = useRef(false);
+  const shownToasts = useRef<Set<string>>(new Set());
 
+  // Toast freshly added notifications
   useEffect(() => {
-    startRealtimeSimulator();
-  }, []);
-
-  // Toast freshly added notifications, deduped persistently by event id.
-  useEffect(() => {
-    if (!initialized.current) {
-      // Don't toast the seed batch on first render. Mark them as seen.
-      notifications.forEach((n) => shouldShowToast(n.id));
-      initialized.current = true;
+    if (!notifications.length) return;
+    if (shownToasts.current.size === 0) {
+      // First load, populate set without toasting
+      notifications.forEach((n: NotificationItem) => shownToasts.current.add(n._id));
       return;
     }
-    const latest = notifications[0];
-    if (latest && latest.unread && shouldShowToast(latest.id)) {
-      toast(latest.title, { description: latest.desc, id: latest.id });
-    }
+    
+    // Toast any new unread
+    notifications.forEach((n: NotificationItem) => {
+      if (!n.isRead && !shownToasts.current.has(n._id)) {
+        toast(n.title, { description: n.message, id: n._id });
+        shownToasts.current.add(n._id);
+      }
+    });
   }, [notifications]);
 
   return (
@@ -96,25 +122,30 @@ export function TopBar() {
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="text-xs">{unread} new</Badge>
                 <button
-                  className="text-[11px] text-primary hover:underline"
-                  onClick={() => notificationsApi.markAllRead()}
+                  className="text-[11px] text-primary hover:underline disabled:opacity-50"
+                  onClick={() => markAllReadMut.mutate()}
+                  disabled={markAllReadMut.isPending || unread === 0}
                 >
                   Mark all read
                 </button>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {notifications.slice(0, 5).map((n) => (
+            {notifications.length === 0 ? (
+               <div className="py-4 text-center text-sm text-muted-foreground">No new notifications</div>
+            ) : notifications.slice(0, 5).map((n: NotificationItem) => (
               <DropdownMenuItem
-                key={n.id}
-                className="flex flex-col items-start gap-0.5 py-2"
-                onClick={() => notificationsApi.markRead(n.id)}
+                key={n._id}
+                className="flex flex-col items-start gap-0.5 py-2 cursor-pointer"
+                onClick={() => {
+                  if (!n.isRead) markAsReadMut.mutate(n._id);
+                }}
               >
                 <div className="flex w-full items-center justify-between gap-2">
-                  <span className="text-sm font-medium">{n.title}</span>
-                  <span className="text-[10px] text-muted-foreground">{n.time}</span>
+                  <span className={`text-sm ${!n.isRead ? "font-semibold" : "font-medium"}`}>{n.title}</span>
+                  <span className="text-[10px] text-muted-foreground">{new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
-                <span className="text-xs text-muted-foreground">{n.desc}</span>
+                <span className="text-xs text-muted-foreground">{n.message}</span>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
@@ -125,15 +156,15 @@ export function TopBar() {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="ml-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground text-xs font-semibold ring-offset-background transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-              EB
+            <button className="ml-1 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground text-xs font-semibold ring-offset-background transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 uppercase">
+              {initials}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuLabel>
               <div className="flex flex-col">
-                <span className="text-sm font-medium">Elena Brooks</span>
-                <span className="text-xs text-muted-foreground">elena@store.io</span>
+                <span className="text-sm font-medium">{name}</span>
+                <span className="text-xs text-muted-foreground">{email}</span>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -141,7 +172,7 @@ export function TopBar() {
             <DropdownMenuItem asChild><Link to="/users">Team & roles</Link></DropdownMenuItem>
             <DropdownMenuItem asChild><Link to="/audit-logs">Audit logs</Link></DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Sign out</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive cursor-pointer" onClick={() => logout()}>Sign out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -2,8 +2,9 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Package, Tags, ShoppingCart, Users, Boxes,
   Ticket, Star, BarChart3, Megaphone, FileText, Settings,
-  ShieldCheck, Bell, Store, ScrollText,
+  ShieldCheck, Bell, Store, ScrollText, Mail, LayoutTemplate
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -34,6 +35,7 @@ const sections: { label: string; items: { title: string; url: string; icon: type
       { title: "Orders", url: "/orders", icon: ShoppingCart },
       { title: "Customers", url: "/customers", icon: Users },
       { title: "Coupons", url: "/coupons", icon: Ticket },
+      { title: "Contact Inquiries", url: "/contact-inquiries", icon: Mail },
     ],
   },
   {
@@ -49,6 +51,7 @@ const sections: { label: string; items: { title: string; url: string; icon: type
       { title: "Admin Users", url: "/users", icon: ShieldCheck },
       { title: "Audit Logs", url: "/audit-logs", icon: ScrollText },
       { title: "Settings", url: "/settings", icon: Settings },
+      { title: "Storefront Config", url: "/storefront-config", icon: LayoutTemplate },
     ],
   },
 ];
@@ -57,6 +60,13 @@ const sections: { label: string; items: { title: string; url: string; icon: type
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isActive = (url: string) => (url === "/" ? pathname === "/" : pathname.startsWith(url));
+  const { user } = useAuth();
+
+  const name = user ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email?.split("@")[0] || "Admin" : "Admin";
+  const role = user?.role || "Administrator";
+  const initials = user
+    ? ((user.firstName?.[0] || "") + (user.lastName?.[0] || "")).toUpperCase() || user.email?.[0]?.toUpperCase() || "A"
+    : "A";
 
   return (
     <Sidebar collapsible="icon">
@@ -94,12 +104,12 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">
         <div className="flex items-center gap-2.5 px-2 py-2 group-data-[collapsible=icon]:hidden">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground text-xs font-semibold">
-            EB
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground text-xs font-semibold uppercase">
+            {initials}
           </div>
           <div className="flex min-w-0 flex-col">
-            <span className="truncate text-sm font-medium">Elena Brooks</span>
-            <span className="truncate text-xs text-muted-foreground">Super Admin</span>
+            <span className="truncate text-sm font-medium">{name}</span>
+            <span className="truncate text-xs text-muted-foreground">{role}</span>
           </div>
         </div>
       </SidebarFooter>

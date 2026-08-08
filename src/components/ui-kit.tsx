@@ -95,11 +95,12 @@ export function StatusBadge({ status }: { status: string }) {
     regular: "bg-muted text-muted-foreground",
     new: "bg-[color:var(--info)]/10 text-[color:var(--info)]",
   };
-  const key = status.toLowerCase();
+  const safeStatus = status || "unknown";
+  const key = safeStatus.toLowerCase();
   return (
     <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize", map[key] ?? "bg-muted text-muted-foreground")}>
       <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-current opacity-70" />
-      {status}
+      {safeStatus}
     </span>
   );
 }

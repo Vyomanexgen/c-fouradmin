@@ -4,6 +4,8 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
+  useNavigate,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -15,6 +17,8 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { TopBar } from "@/components/top-bar";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider, useAuth } from "../context/AuthContext";
+import { ToastProvider } from "../context/ToastContext";
 
 function NotFoundComponent() {
   return (
@@ -105,18 +109,63 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-background">
-          <AppSidebar />
-          <SidebarInset className="flex min-w-0 flex-1 flex-col">
-            <TopBar />
-            <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-              <Outlet />
-            </main>
-          </SidebarInset>
-        </div>
-        <Toaster />
-      </SidebarProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <InnerRootComponent />
+        </AuthProvider>
+      </ToastProvider>
     </QueryClientProvider>
+  );
+}
+
+function InnerRootComponent() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isLoginPage = pathname === "/login";
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user && !isLoginPage) {
+        navigate({ to: "/login" });
+      } else if (user && isLoginPage) {
+        navigate({ to: "/" });
+      }
+    }
+  }, [user, loading, pathname, navigate, isLoginPage]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground font-medium">Loading session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoginPage) {
+    return (
+      <div className="flex min-h-screen w-full bg-background items-center justify-center">
+        <Outlet />
+        <Toaster />
+      </div>
+    );
+  }
+
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background">
+        <AppSidebar />
+        <SidebarInset className="flex min-w-0 flex-1 flex-col">
+          <TopBar />
+          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            <Outlet />
+          </main>
+        </SidebarInset>
+      </div>
+      <Toaster />
+    </SidebarProvider>
   );
 }
