@@ -98,8 +98,8 @@ function UsersPage() {
                            No roles configured.
                          </TableCell>
                        </TableRow>
-                    ) : roles.map((r: any) => (
-                      <TableRow key={r._id}>
+                    ) : roles.map((r: any, idx: number) => (
+                      <TableRow key={r._id || r.id || idx}>
                         <TableCell className="font-medium capitalize">{r.name.replace("_", " ")}</TableCell>
                         <TableCell className="text-muted-foreground max-w-sm truncate">{r.description || "—"}</TableCell>
                         <TableCell>

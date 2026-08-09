@@ -42,7 +42,7 @@ function ContactInquiriesPage() {
           data: {
             ...old.data,
             submissions: old.data.submissions.map((sub: ContactSubmission) => 
-              sub._id === id ? { ...sub, status: newStatus } : sub
+              (sub._id || sub.id) === id ? { ...sub, status: newStatus } : sub
             )
           }
         };
@@ -117,8 +117,8 @@ function ContactInquiriesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {submissions.map((sub: ContactSubmission) => (
-                  <TableRow key={sub._id}>
+                {submissions.map((sub: ContactSubmission, idx: number) => (
+                  <TableRow key={sub._id || sub.id || idx}>
                     <TableCell className="whitespace-nowrap">
                       {format(new Date(sub.createdAt), "MMM d, yyyy HH:mm")}
                     </TableCell>
@@ -134,7 +134,7 @@ function ContactInquiriesPage() {
                     <TableCell>
                       <Select 
                         value={sub.status} 
-                        onValueChange={(val: any) => updateStatusMutation.mutate({ id: sub._id, status: val })}
+                        onValueChange={(val: any) => updateStatusMutation.mutate({ id: sub._id || sub.id || "", status: val })}
                       >
                         <SelectTrigger className="w-[120px] h-8">
                           <SelectValue>

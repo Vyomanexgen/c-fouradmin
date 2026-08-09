@@ -149,8 +149,15 @@ function SettingsPage() {
         platformFee,
         handlingFee,
         multiStoreMode,
-        storeInfo,
-        email: emailConfig,
+        storeInfo: {
+          ...storeInfo,
+          contactEmail: storeInfo.contactEmail || undefined,
+          contactPhone: storeInfo.contactPhone || undefined,
+        },
+        email: {
+          ...emailConfig,
+          replyToAddress: emailConfig.replyToAddress || undefined,
+        },
         notifications: {
           orderPlaced: notifications.orderPlaced,
           orderPaid: notifications.orderPlaced, // simplified mapping
@@ -254,7 +261,7 @@ function SettingsPage() {
                   <div className="grid gap-1.5"><Label>Default currency</Label>
                     <Select value={storeInfo.defaultCurrency} onValueChange={(v) => setStoreInfo(s => ({ ...s, defaultCurrency: v }))} disabled={isSaving}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent><SelectItem value="usd">USD</SelectItem><SelectItem value="eur">EUR</SelectItem><SelectItem value="gbp">GBP</SelectItem></SelectContent>
+                      <SelectContent><SelectItem value="usd">USD</SelectItem><SelectItem value="eur">EUR</SelectItem><SelectItem value="gbp">GBP</SelectItem><SelectItem value="inr">INR (₹)</SelectItem></SelectContent>
                     </Select>
                   </div>
                   <div className="flex items-center justify-between rounded-lg border border-border p-3"><Label className="font-normal">Multi-store mode</Label><Switch checked={multiStoreMode} onCheckedChange={setMultiStoreMode} disabled={isSaving} /></div>

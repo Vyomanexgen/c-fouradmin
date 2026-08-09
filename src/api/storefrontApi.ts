@@ -33,7 +33,8 @@ export interface StorefrontConfig {
 }
 
 export interface ContactSubmission {
-  _id: string;
+  _id?: string;
+  id?: string;
   name: string;
   email: string;
   phone?: string;
