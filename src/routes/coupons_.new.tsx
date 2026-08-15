@@ -134,7 +134,7 @@ function NewCouponPage() {
                       <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                       <SelectContent>
                         <SelectItem value="percentage">Percentage (%)</SelectItem>
-                        <SelectItem value="fixed">Fixed Amount ($)</SelectItem>
+                        <SelectItem value="fixed">Fixed Amount (₹)</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -154,7 +154,7 @@ function NewCouponPage() {
               <div className="grid grid-cols-2 gap-4">
                 <FormField control={form.control} name="minPurchaseAmount" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Minimum Purchase Amount ($)</FormLabel>
+                    <FormLabel>Minimum Purchase Amount (₹)</FormLabel>
                     <FormControl><Input type="number" step="0.01" min="0" placeholder="0.00" {...field} value={field.value ?? ""} /></FormControl>
                     <FormDescription>Leave blank for no minimum.</FormDescription>
                     <FormMessage />

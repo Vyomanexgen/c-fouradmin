@@ -110,7 +110,7 @@ function ProductsPage() {
                   { key: "name", label: "Name" },
                   { key: "sku", label: "SKU" },
                   { key: "category", label: "Category" },
-                  { key: "price", label: "Price", format: (r) => `$${r.price}` },
+                  { key: "price", label: "Price", format: (r) => `₹${r.price}` },
                   { key: "stock", label: "Stock" },
                   { key: "status", label: "Status" },
                 ]}
@@ -227,11 +227,11 @@ function ProductsPage() {
                       <TableCell className="text-right">
                         {p.defaultVariant?.offerPrice && p.defaultVariant.offerPrice < originalPrice ? (
                           <div className="flex flex-col items-end leading-tight">
-                            <span className="font-medium">${price.toFixed(2)}</span>
-                            <span className="text-xs text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
+                            <span className="font-medium">₹{price.toFixed(2)}</span>
+                            <span className="text-xs text-muted-foreground line-through">₹{originalPrice.toFixed(2)}</span>
                           </div>
                         ) : (
-                          <span className="font-medium">${price.toFixed(2)}</span>
+                          <span className="font-medium">₹{price.toFixed(2)}</span>
                         )}
                       </TableCell>
                       <TableCell className="text-right">

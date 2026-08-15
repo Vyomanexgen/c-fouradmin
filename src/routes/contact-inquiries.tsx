@@ -118,7 +118,7 @@ function ContactInquiriesPage() {
               </TableHeader>
               <TableBody>
                 {submissions.map((sub: ContactSubmission, idx: number) => (
-                  <TableRow key={sub._id || sub.id || idx}>
+                  <TableRow key={`${sub._id || sub.id || 'contact-inquiry'}-${idx}`}>
                     <TableCell className="whitespace-nowrap">
                       {format(new Date(sub.createdAt), "MMM d, yyyy HH:mm")}
                     </TableCell>

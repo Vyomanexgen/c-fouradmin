@@ -215,7 +215,7 @@ function InventoryPage() {
                                   <Input id="receive_quantity" name="quantity" type="number" min="1" required />
                                 </div>
                                 <div className="grid gap-2">
-                                  <Label htmlFor="costPerUnit">Cost Per Unit ($)</Label>
+                                  <Label htmlFor="costPerUnit">Cost Per Unit (₹)</Label>
                                   <Input id="costPerUnit" name="costPerUnit" type="number" step="0.01" min="0" required />
                                 </div>
                               </div>

@@ -14,7 +14,12 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Checkbox } from "@/components/ui/checkbox";
+import { getProducts } from "@/api/productApi";
 import { toast } from "sonner";
+import { Check } from "lucide-react";
 
 const bannerSchema = z.object({
   image: z.string().url({ message: "Must be a valid image URL" }).min(1, "Image is required"),
@@ -37,11 +42,21 @@ const socialLinkSchema = z.object({
   url: z.string().url({ message: "Must be a valid URL" }),
 });
 
+const navItemSchema: z.ZodType<any> = z.lazy(() => z.object({
+  name: z.string().min(1, "Name is required"),
+  url: z.string().min(1, "URL is required"),
+  order: z.coerce.number().int().default(0),
+  subItems: z.array(navItemSchema).optional(),
+}));
+
 const storefrontSchema = z.object({
+  navItems: z.array(navItemSchema).default([]),
   heroSection: z.object({
     banners: z.array(bannerSchema).default([]),
     featuredProductIds: z.array(z.string()).default([]),
   }).default({ banners: [], featuredProductIds: [] }),
+  newArrivalProductIds: z.array(z.string()).default([]),
+  offerProductIds: z.array(z.string()).default([]),
   aboutUs: z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
@@ -79,7 +94,10 @@ function StorefrontConfigPage() {
   const form = useForm<StorefrontFormValues>({
     resolver: zodResolver(storefrontSchema),
     defaultValues: {
+      navItems: [],
       heroSection: { banners: [], featuredProductIds: [] },
+      newArrivalProductIds: [],
+      offerProductIds: [],
       aboutUs: { title: "", description: "", image: "" },
       footer: { quickLinks: [], contactUs: { address: "", phone: "", email: "", hours: "" }, copyrightText: "" },
       socialLinks: [],
@@ -159,16 +177,24 @@ function StorefrontConfigPage() {
       </div>
 
       <Tabs defaultValue="hero" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:w-[400px]">
+        <TabsList className="grid w-full grid-cols-6 lg:w-[600px]">
+          <TabsTrigger value="nav">Navigation</TabsTrigger>
           <TabsTrigger value="hero">Hero</TabsTrigger>
+          <TabsTrigger value="curated">Curated</TabsTrigger>
           <TabsTrigger value="about">About Us</TabsTrigger>
           <TabsTrigger value="footer">Footer</TabsTrigger>
           <TabsTrigger value="social">Social</TabsTrigger>
         </TabsList>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-8">
+          <TabsContent value="nav">
+            <NavItemsEditor form={form} />
+          </TabsContent>
           <TabsContent value="hero">
             <HeroBannersEditor form={form} />
+          </TabsContent>
+          <TabsContent value="curated">
+            <CuratedProductsEditor form={form} />
           </TabsContent>
           <TabsContent value="about">
             <AboutUsEditor form={form} />
@@ -186,6 +212,106 @@ function StorefrontConfigPage() {
 }
 
 // Subcomponents
+
+// A reusable component to edit arrays of strings as comma-separated values
+// A reusable component to select multiple products visually
+function MultiProductSelector({ value, onChange, placeholder }: { value: string[], onChange: (val: string[]) => void, placeholder?: string }) {
+  const [open, setOpen] = useState(false);
+  const { data: productsData, isLoading } = useQuery({
+    queryKey: ["products", "all"],
+    queryFn: () => getProducts({ limit: 100 }), 
+  });
+
+  const products = productsData?.products || [];
+  
+  const handleSelect = (productId: string) => {
+    if (value.includes(productId)) {
+      onChange(value.filter(id => id !== productId));
+    } else {
+      onChange([...value, productId]);
+    }
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between h-auto min-h-[2.5rem] py-2 text-left font-normal">
+          {value.length > 0 ? (
+            <div className="flex flex-wrap gap-1">
+              {value.map(id => {
+                const prod = products.find(p => (p._id || p.id) === id);
+                return (
+                  <span key={id} className="bg-secondary text-secondary-foreground px-2 py-0.5 rounded-md text-xs">
+                    {prod ? prod.name : id}
+                  </span>
+                );
+              })}
+            </div>
+          ) : (
+            <span className="text-muted-foreground">{placeholder || "Select products..."}</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[400px] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search products..." />
+          <CommandList>
+            <CommandEmpty>{isLoading ? "Loading products..." : "No products found."}</CommandEmpty>
+            <CommandGroup>
+              {products.map((product) => {
+                const pId = product._id || product.id;
+                const isSelected = value.includes(pId);
+                return (
+                  <CommandItem
+                    key={pId}
+                    value={product.name}
+                    onSelect={() => handleSelect(pId!)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={isSelected} className="pointer-events-none" />
+                      <div className="flex flex-col">
+                         <span>{product.name}</span>
+                         {product.defaultVariant?.sku && <span className="text-xs text-muted-foreground">SKU: {product.defaultVariant.sku}</span>}
+                      </div>
+                    </div>
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function CuratedProductsEditor({ form }: { form: any }) {
+  return (
+    <SectionCard title="Curated Products" description="Select products for the New Arrivals and Offer Products sections.">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Label>New Arrival Products</Label>
+          <MultiProductSelector
+            value={form.watch("newArrivalProductIds") || []}
+            onChange={(val) => form.setValue("newArrivalProductIds", val, { shouldDirty: true })}
+            placeholder="Search and select products..."
+          />
+          <p className="text-xs text-muted-foreground">These products will be featured in the New Arrivals marquee on the homepage.</p>
+        </div>
+        
+        <div className="space-y-2">
+          <Label>Offer Products</Label>
+          <MultiProductSelector
+            value={form.watch("offerProductIds") || []}
+            onChange={(val) => form.setValue("offerProductIds", val, { shouldDirty: true })}
+            placeholder="Search and select products..."
+          />
+          <p className="text-xs text-muted-foreground">These products will be featured in the Offer Products section on the homepage.</p>
+        </div>
+      </div>
+    </SectionCard>
+  );
+}
 
 function HeroBannersEditor({ form }: { form: any }) {
   const { fields, append, remove } = useFieldArray({
@@ -414,6 +540,77 @@ function SocialLinksEditor({ form }: { form: any }) {
         ))}
         <Button type="button" variant="outline" onClick={() => append({ platform: "Instagram", url: "" })}>
           <Plus className="h-4 w-4 mr-2" /> Add Social Link
+        </Button>
+      </div>
+    </SectionCard>
+  );
+}
+
+function NavItemNode({ form, namePrefix, removeNode, depth = 0 }: { form: any, namePrefix: string, removeNode: () => void, depth?: number }) {
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: `${namePrefix}.subItems`,
+  });
+
+  return (
+    <div className={`space-y-4 ${depth > 0 ? "border-l-2 border-border pl-6 ml-2 mt-4 relative before:absolute before:left-0 before:top-5 before:w-4 before:h-[2px] before:bg-border" : ""}`}>
+      <div className="flex items-start gap-3">
+        <div className="flex-1 space-y-1">
+          <Input {...form.register(`${namePrefix}.name`)} placeholder="Link Name (e.g., Shop)" className="h-9" />
+        </div>
+        <div className="flex-1 space-y-1">
+          <Input {...form.register(`${namePrefix}.url`)} placeholder="URL (e.g., /shop)" className="h-9" />
+        </div>
+        <div className="w-[80px] space-y-1">
+          <Input type="number" {...form.register(`${namePrefix}.order`)} placeholder="Order" className="h-9" />
+        </div>
+        <Button type="button" variant="secondary" size="icon" className="h-9 w-9 shrink-0" onClick={() => append({ name: "", url: "", order: fields.length + 1 })} title="Add Sub-item">
+          <Plus className="h-4 w-4" />
+        </Button>
+        <Button type="button" variant="ghost" size="icon" onClick={removeNode} className="h-9 w-9 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10">
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+      
+      {fields.length > 0 && (
+        <div className="space-y-2">
+          {fields.map((field, index) => (
+            <NavItemNode 
+              key={field.id} 
+              form={form} 
+              namePrefix={`${namePrefix}.subItems.${index}`} 
+              removeNode={() => remove(index)}
+              depth={depth + 1}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function NavItemsEditor({ form }: { form: any }) {
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "navItems",
+  });
+
+  return (
+    <SectionCard title="Navigation Items" description="Manage the links in the top navigation bar.">
+      <div className="space-y-6">
+        <div className="space-y-4">
+          {fields.map((field, index) => (
+            <div key={field.id} className="p-4 border border-border rounded-lg bg-card shadow-sm">
+              <NavItemNode 
+                form={form} 
+                namePrefix={`navItems.${index}`} 
+                removeNode={() => remove(index)} 
+              />
+            </div>
+          ))}
+        </div>
+        <Button type="button" variant="outline" onClick={() => append({ name: "", url: "", order: fields.length + 1 })}>
+          <Plus className="h-4 w-4 mr-2" /> Add Top-Level Nav Item
         </Button>
       </div>
     </SectionCard>

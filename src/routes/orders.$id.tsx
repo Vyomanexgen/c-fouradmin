@@ -56,15 +56,15 @@ function OrderDetailPage() {
                     <p className="truncate text-sm font-medium">Product line item {i + 1}</p>
                     <p className="text-xs text-muted-foreground">SKU-0{1234 + i} · Qty 1</p>
                   </div>
-                  <span className="font-medium">${(order.amount / order.items).toFixed(2)}</span>
+                  <span className="font-medium">₹{(order.amount / order.items).toFixed(2)}</span>
                 </div>
               ))}
             </div>
             <div className="mt-4 space-y-1.5 border-t border-border pt-4 text-sm">
-              <div className="flex justify-between text-muted-foreground"><span>Subtotal</span><span>${(order.amount * 0.9).toFixed(2)}</span></div>
-              <div className="flex justify-between text-muted-foreground"><span>Shipping</span><span>$8.00</span></div>
-              <div className="flex justify-between text-muted-foreground"><span>Tax</span><span>${(order.amount * 0.05).toFixed(2)}</span></div>
-              <div className="flex justify-between border-t border-border pt-2 text-base font-semibold"><span>Total</span><span>${order.amount.toFixed(2)}</span></div>
+              <div className="flex justify-between text-muted-foreground"><span>Subtotal</span><span>₹{(order.amount * 0.9).toFixed(2)}</span></div>
+              <div className="flex justify-between text-muted-foreground"><span>Shipping</span><span>₹8.00</span></div>
+              <div className="flex justify-between text-muted-foreground"><span>Tax</span><span>₹{(order.amount * 0.05).toFixed(2)}</span></div>
+              <div className="flex justify-between border-t border-border pt-2 text-base font-semibold"><span>Total</span><span>₹{order.amount.toFixed(2)}</span></div>
             </div>
           </SectionCard>
 

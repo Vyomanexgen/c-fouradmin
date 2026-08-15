@@ -145,7 +145,7 @@ function DashboardPage() {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
                   <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }} />
                   <Area type="monotone" dataKey="value" stroke="var(--chart-1)" strokeWidth={2} fill="url(#rev)" />
                 </AreaChart>
@@ -230,8 +230,8 @@ function DashboardPage() {
                   <p className="text-xs text-muted-foreground">{p.category} · {p.unitsSold} sold</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold">${p.price}</p>
-                  <p className="text-xs text-muted-foreground">${p.revenue.toLocaleString()} rev</p>
+                  <p className="text-sm font-semibold">₹{p.price}</p>
+                  <p className="text-xs text-muted-foreground">₹{p.revenue.toLocaleString()} rev</p>
                 </div>
               </div>
             )) : <div className="py-4 text-center text-sm text-muted-foreground">No top products</div>}
@@ -284,7 +284,7 @@ function DashboardPage() {
                   <TableCell className="text-sm text-muted-foreground">{o.date}</TableCell>
                   <TableCell><StatusBadge status={o.paymentStatus.toLowerCase()} /></TableCell>
                   <TableCell><StatusBadge status={o.fulfillmentStatus.toLowerCase()} /></TableCell>
-                  <TableCell className="text-right font-medium">${o.amount.toFixed(2)}</TableCell>
+                  <TableCell className="text-right font-medium">₹{o.amount.toFixed(2)}</TableCell>
                 </TableRow>
               )) : (
                 <TableRow>

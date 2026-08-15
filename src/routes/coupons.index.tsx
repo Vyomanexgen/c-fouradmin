@@ -95,7 +95,7 @@ function CouponsPage() {
                         </TableCell>
                         <TableCell className="text-sm capitalize">{c.discountType}</TableCell>
                         <TableCell className="font-medium">
-                          {c.discountType === "percentage" ? `${c.discountValue}%` : `$${c.discountValue.toFixed(2)}`}
+                          {c.discountType === "percentage" ? `${c.discountValue}%` : `₹${c.discountValue.toFixed(2)}`}
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-col gap-1">

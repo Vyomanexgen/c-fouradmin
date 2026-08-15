@@ -134,7 +134,7 @@ function AnalyticsPage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Sales Velocity</p>
-                <p className="text-2xl font-bold">${realtimeLoading ? "-" : realtime?.salesVelocity ?? 0}/hr</p>
+                <p className="text-2xl font-bold">₹{realtimeLoading ? "-" : realtime?.salesVelocity ?? 0}/hr</p>
               </div>
             </div>
           </SectionCard>

@@ -86,7 +86,7 @@ function CustomersPage() {
                   { key: "name", label: "Name" },
                   { key: "email", label: "Email" },
                   { key: "orders", label: "Orders" },
-                  { key: "spent", label: "Total spent", format: (r) => `$${r.spent}` },
+                  { key: "spent", label: "Total spent", format: (r) => `₹${r.spent}` },
                   { key: "status", label: "Status" },
                   { key: "joined", label: "Joined" },
                 ]}
@@ -175,7 +175,7 @@ function CustomersPage() {
                       {c.createdAt ? format(new Date(c.createdAt), 'PP') : "—"}
                     </TableCell>
                     <TableCell className="text-right">{c.ordersCount || 0}</TableCell>
-                    <TableCell className="text-right font-medium">${(c.totalSpent || 0).toLocaleString()}</TableCell>
+                    <TableCell className="text-right font-medium">₹{(c.totalSpent || 0).toLocaleString()}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         {cStatus === "blocked" ? (

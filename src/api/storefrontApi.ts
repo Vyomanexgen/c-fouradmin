@@ -9,7 +9,15 @@ export interface HeroBanner {
   isActive: boolean;
 }
 
+export interface NavItem {
+  name: string;
+  url: string;
+  order: number;
+  subItems?: NavItem[];
+}
+
 export interface StorefrontConfig {
+  navItems?: NavItem[];
   heroSection?: {
     banners: HeroBanner[];
     featuredProductIds: string[];
@@ -78,6 +86,6 @@ export const getContactSubmissions = async (params: { page?: number; limit?: num
 };
 
 export const updateSubmissionStatus = async ({ id, status }: { id: string; status: 'pending' | 'read' | 'replied' }) => {
-  const response = await apiClient.patch(`/api/v1/admin/catalog/contact-submissions/${id}`, { status });
+  const response = await apiClient.patch(`/api/v1/admin/catalog/contact-submissions/${id}/status`, { status });
   return response.data;
 };
