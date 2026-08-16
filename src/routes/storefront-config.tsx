@@ -180,7 +180,7 @@ function StorefrontConfigPage() {
         <TabsList className="grid w-full grid-cols-6 lg:w-[600px]">
           <TabsTrigger value="nav">Navigation</TabsTrigger>
           <TabsTrigger value="hero">Hero</TabsTrigger>
-          <TabsTrigger value="curated">Curated</TabsTrigger>
+          <TabsTrigger value="curated">Featured</TabsTrigger>
           <TabsTrigger value="about">About Us</TabsTrigger>
           <TabsTrigger value="footer">Footer</TabsTrigger>
           <TabsTrigger value="social">Social</TabsTrigger>
@@ -287,7 +287,7 @@ function MultiProductSelector({ value, onChange, placeholder }: { value: string[
 
 function CuratedProductsEditor({ form }: { form: any }) {
   return (
-    <SectionCard title="Curated Products" description="Select products for the New Arrivals and Offer Products sections.">
+    <SectionCard title="Featured Products" description="Select products for the New Arrivals and Offer Products sections.">
       <div className="space-y-6">
         <div className="space-y-2">
           <Label>New Arrival Products</Label>
