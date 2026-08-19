@@ -32,8 +32,8 @@ const iconMap: Record<string, React.ElementType> = {
 const TABS = [
   { value: "all", label: "All", type: undefined },
   { value: "orders", label: "Orders", type: "order" },
-  { value: "inventory", label: "Inventory", type: "inventory" },
-  { value: "messages", label: "Messages", type: "message" },
+  { value: "refunds", label: "Refunds", type: "refund" },
+  { value: "system", label: "System", type: "system" },
 ];
 
 function NotificationsPage() {

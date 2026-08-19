@@ -147,7 +147,7 @@ function InnerRootComponent() {
 
   if (isLoginPage) {
     return (
-      <div className="flex min-h-screen w-full bg-background items-center justify-center">
+      <div className="min-h-screen w-full bg-background">
         <Outlet />
         <Toaster />
       </div>

@@ -168,16 +168,32 @@ function SettingsPage() {
 
       // 2. Update payment configurations
       const providers: Array<"stripe" | "razorpay" | "cashfree"> = ["stripe", "razorpay", "cashfree"];
+      
+      const originalGateways: any = {};
+      if (paymentsData) {
+        const list = paymentsData.data || paymentsData;
+        list.forEach((g: any) => { originalGateways[g.provider] = g; });
+      }
+
       for (const provider of providers) {
         const gw = gateways[provider];
-        if (gw.isActive || gw.keyId || gw.secret) {
-          if (gw.isActive && (!gw.keyId || !gw.secret)) {
-            throw new Error(`Key ID and Secret Key are required for active provider: ${provider.toUpperCase()}`);
-          }
+        const orig = originalGateways[provider];
+        
+        // Did the user change the isActive status or provide a new secret?
+        const isActiveChanged = orig ? orig.isActive !== gw.isActive : false;
+        const hasNewSecret = gw.secret && gw.secret.trim() !== "";
+        const hasNewKey = orig ? orig.keyId !== gw.keyId : false;
+
+        // If they turned it on, they MUST provide a secret (unless it's already active and they are just changing keyId, which is rare)
+        if (gw.isActive && !hasNewSecret && (!orig || !orig.isActive)) {
+            throw new Error(`Secret Key is required to activate ${provider.toUpperCase()}`);
+        }
+
+        if (isActiveChanged || hasNewSecret || hasNewKey) {
           await updatePaymentGateway(provider, {
             isActive: gw.isActive,
             keyId: gw.keyId,
-            secret: gw.secret,
+            secret: hasNewSecret ? gw.secret : "REDACTED_SECRET", // Send dummy if not changed/provided to pass backend validation
             webhookSecret: gw.webhookSecret || undefined,
           });
         }

@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
+import { Loader2, Plus, Trash2, GripVertical, Image as ImageIcon, Upload } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -319,6 +319,17 @@ function HeroBannersEditor({ form }: { form: any }) {
     name: "heroSection.banners",
   });
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      form.setValue(`heroSection.banners.${index}.image`, reader.result as string, { shouldDirty: true });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
   return (
     <SectionCard title="Hero Banners" description="Manage the rotating banners on the home page.">
       <div className="space-y-6">
@@ -334,8 +345,22 @@ function HeroBannersEditor({ form }: { form: any }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Image URL *</Label>
-                    <Input {...form.register(`heroSection.banners.${index}.image`)} placeholder="https://..." />
+                    <Label>Image URL or Upload *</Label>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Input {...form.register(`heroSection.banners.${index}.image`)} placeholder="https://..." className="flex-1" />
+                      <div className="relative">
+                        <Input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={(e) => handleFileUpload(e, index)}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <Button type="button" variant="outline" className="w-full sm:w-auto pointer-events-none">
+                          <Upload className="mr-2 h-4 w-4" />
+                          Upload
+                        </Button>
+                      </div>
+                    </div>
                     {form.formState.errors.heroSection?.banners?.[index]?.image && (
                       <p className="text-sm text-destructive">{form.formState.errors.heroSection.banners[index].image.message}</p>
                     )}
@@ -389,6 +414,17 @@ function HeroBannersEditor({ form }: { form: any }) {
 
 function AboutUsEditor({ form }: { form: any }) {
   const imageVal = form.watch("aboutUs.image");
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      form.setValue("aboutUs.image", reader.result as string, { shouldDirty: true });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
   return (
     <SectionCard title="About Us Section" description="Content for the About Us section on the storefront.">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -404,8 +440,22 @@ function AboutUsEditor({ form }: { form: any }) {
             {form.formState.errors.aboutUs?.description && <p className="text-sm text-destructive">{form.formState.errors.aboutUs.description.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label>Image URL *</Label>
-            <Input {...form.register("aboutUs.image")} placeholder="https://..." />
+            <Label>Image URL or Upload *</Label>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Input {...form.register("aboutUs.image")} placeholder="https://..." className="flex-1" />
+              <div className="relative">
+                <Input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleFileUpload}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <Button type="button" variant="outline" className="w-full sm:w-auto pointer-events-none">
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload
+                </Button>
+              </div>
+            </div>
             {form.formState.errors.aboutUs?.image && <p className="text-sm text-destructive">{form.formState.errors.aboutUs.image.message}</p>}
           </div>
         </div>

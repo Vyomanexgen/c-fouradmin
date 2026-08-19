@@ -21,6 +21,11 @@ export const getOrders = async (params?: { page?: number; limit?: number; search
   return response.data?.data || response.data;
 };
 
+export const getOrderById = async (id: string) => {
+  const response = await apiClient.get(`/api/v1/orders/admin/${id}`);
+  return response.data?.data || response.data;
+};
+
 export const updateOrderStatus = async (id: string, status: string) => {
   const response = await apiClient.patch(`/api/v1/orders/admin/${id}/status`, { status });
   return response.data;

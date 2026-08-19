@@ -13,8 +13,33 @@ export interface InventoryResponse {
 }
 
 export const getInventory = async (params?: { page?: number; limit?: number; search?: string; status?: string }): Promise<InventoryResponse> => {
-  const response = await apiClient.get("/api/v1/inventory", { params });
-  return response.data?.data || response.data;
+  try {
+    const response = await apiClient.get("/api/v1/admin/catalog/products", { params });
+    const products = response.data?.data || response.data || [];
+    const items = Array.isArray(products) ? products : (products.products || products.data || []);
+    const mapped = items.map((p: any) => {
+      const qty = p.defaultVariant?.stockQuantity ?? p.totalStock ?? 0;
+      let status = "in_stock";
+      if (qty === 0) status = "out_of_stock";
+      else if (qty < 10) status = "low_stock";
+      
+      return {
+        id: p._id || p.id,
+        sku: p.defaultVariant?.sku || p.sku || "N/A",
+        quantity: qty,
+        status,
+        name: p.name
+      };
+    });
+
+    return {
+      data: mapped,
+      total: response.data?.pagination?.totalItems || response.data?.total || mapped.length
+    };
+  } catch (err) {
+    // fallback if API fails
+    return { data: [], total: 0 };
+  }
 };
 
 export const adjustStock = async (id: string, payload: { quantity: number; reason: string }) => {

@@ -5,6 +5,7 @@ import { PageHeader, SectionCard, StatusBadge, EmptyState } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getContactSubmissions, updateSubmissionStatus, queryKeys, ContactSubmission } from "@/api/storefrontApi";
 import { format } from "date-fns";
@@ -128,8 +129,25 @@ function ContactInquiriesPage() {
                       {sub.phone && <div className="text-xs text-muted-foreground">{sub.phone}</div>}
                     </TableCell>
                     <TableCell className="font-medium">{sub.subject || "No Subject"}</TableCell>
-                    <TableCell className="max-w-xs truncate" title={sub.message}>
-                      {sub.message}
+                    <TableCell className="max-w-xs">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <div className="truncate cursor-pointer hover:text-blue-600 transition-colors" title="Click to read full message">
+                            {sub.message}
+                          </div>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>Message from {sub.name}</DialogTitle>
+                            <DialogDescription>
+                              Received on {format(new Date(sub.createdAt), "MMM d, yyyy HH:mm")}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="mt-4 whitespace-pre-wrap text-sm text-gray-700 max-h-[60vh] overflow-y-auto p-4 bg-gray-50 rounded-md border">
+                            {sub.message}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                     <TableCell>
                       <Select 

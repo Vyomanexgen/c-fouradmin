@@ -110,8 +110,8 @@ function OrdersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-sm truncate max-w-[120px]">{o.customer?.name || o.customerName || o.userId || "Unknown"}</span>
-                        <span className="text-xs text-muted-foreground truncate max-w-[120px]">{o.customer?.email || o.email || "—"}</span>
+                        <span className="text-sm truncate max-w-[120px]">{o.customer?.name || o.customer?.firstName || o.customerName || o.shippingAddress?.fullName || o.shippingAddress?.firstName || o.billingAddress?.name || "Unknown"}</span>
+                        <span className="text-xs text-muted-foreground truncate max-w-[120px]">{o.customer?.email || o.email || o.shippingAddress?.email || "—"}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
@@ -121,7 +121,7 @@ function OrdersPage() {
                       {Array.isArray(o.items) ? o.items.reduce((sum: number, i: any) => sum + (i.quantity || 1), 0) : (o.items || 0)}
                     </TableCell>
                     <TableCell className="text-right font-medium">
-                      ${(o.totalAmount || o.amount || (Array.isArray(o.items) ? o.items.reduce((sum: number, i: any) => sum + ((i.offerPriceAtPurchase || i.originalPriceAtPurchase || 0) * (i.quantity || 1)), 0) : 0)).toFixed(2)}
+                      ₹{(o.totalAmount || o.amount || (Array.isArray(o.items) ? o.items.reduce((sum: number, i: any) => sum + ((i.offerPriceAtPurchase || i.originalPriceAtPurchase || 0) * (i.quantity || 1)), 0) : 0)).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={(o.paymentInfo?.status || o.paymentStatus || o.payment || "unpaid").replace(/_/g, ' ')} />

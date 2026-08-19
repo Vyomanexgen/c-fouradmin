@@ -143,6 +143,17 @@ export function ProductForm({ initialData, isEdit }: ProductFormProps) {
     form.setValue("images", newImages);
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      form.setValue("images", [...imagesValue, reader.result as string]);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = ""; // Reset input
+  };
+
   const createMutation = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
@@ -234,19 +245,34 @@ export function ProductForm({ initialData, isEdit }: ProductFormProps) {
             </SectionCard>
 
             <SectionCard title="Media (Images)">
-              <div className="flex gap-2 mb-4">
-                <Input 
-                  placeholder="Paste image URL here..." 
-                  value={imageUrlInput}
-                  onChange={(e) => setImageUrlInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      addImage();
-                    }
-                  }}
-                />
-                <Button type="button" onClick={addImage} variant="secondary">Add</Button>
+              <div className="flex flex-col sm:flex-row gap-2 mb-4">
+                <div className="flex flex-1 gap-2">
+                  <Input 
+                    placeholder="Paste image URL here..." 
+                    value={imageUrlInput}
+                    onChange={(e) => setImageUrlInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        addImage();
+                      }
+                    }}
+                  />
+                  <Button type="button" onClick={addImage} variant="secondary">Add URL</Button>
+                </div>
+                <div className="relative">
+                  <Input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleFileUpload}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    id="image-upload"
+                  />
+                  <Button type="button" variant="outline" className="w-full sm:w-auto pointer-events-none">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload File
+                  </Button>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {imagesValue.map((url, i) => (

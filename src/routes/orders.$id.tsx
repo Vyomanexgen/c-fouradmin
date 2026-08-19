@@ -3,6 +3,8 @@ import { ArrowLeft, Printer, RefreshCw, MoreHorizontal, MapPin, CreditCard, Truc
 import { orders } from "@/lib/mock-data";
 import { PageHeader, SectionCard, StatusBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { getOrderById } from "@/api/orderApi";
 
 export const Route = createFileRoute("/orders/$id")({
   head: () => ({ meta: [{ title: "Order details — Northwind Admin" }] }),
@@ -20,7 +22,25 @@ const timeline = [
 
 function OrderDetailPage() {
   const { id } = Route.useParams();
-  const order = orders.find((o) => o.id.replace("#", "") === id) ?? orders[0];
+  const { data: realOrder } = useQuery({
+    queryKey: ["order", id],
+    queryFn: () => getOrderById(id),
+  });
+
+  const mockFallback = orders.find((o) => o.id.replace("#", "") === id) ?? orders[0];
+  
+  // Try to normalize real data to match the mock data structure where possible
+  const order = realOrder ? {
+    ...realOrder,
+    id: realOrder.orderNumber || realOrder._id || realOrder.id,
+    date: realOrder.createdAt ? new Date(realOrder.createdAt).toLocaleDateString() : mockFallback.date,
+    items: Array.isArray(realOrder.items) ? realOrder.items.length : mockFallback.items,
+    amount: realOrder.totalAmount || realOrder.amount || mockFallback.amount,
+    payment: realOrder.paymentInfo?.status || realOrder.paymentStatus || mockFallback.payment,
+    fulfillment: realOrder.status || realOrder.orderStatus || mockFallback.fulfillment,
+    customer: realOrder.customer?.name || realOrder.customer?.firstName || realOrder.customerName || realOrder.shippingAddress?.fullName || mockFallback.customer,
+    email: realOrder.customer?.email || realOrder.email || realOrder.shippingAddress?.email || mockFallback.email,
+  } : mockFallback;
 
   return (
     <div className="mx-auto max-w-[1400px]">

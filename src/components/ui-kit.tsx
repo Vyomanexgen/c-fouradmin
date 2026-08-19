@@ -27,7 +27,7 @@ export function KpiCard({
 }) {
   const formatted =
     format === "currency"
-      ? `$${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+      ? `₹${value.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
       : format === "percent"
         ? `${value.toFixed(2)}%`
         : value.toLocaleString();
@@ -60,7 +60,7 @@ export function SectionCard({
       <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div className="min-w-0">
           <h3 className="truncate text-sm font-semibold tracking-tight text-foreground">{title}</h3>
-          {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+          {description && <div className="mt-0.5 text-xs text-muted-foreground">{description}</div>}
         </div>
         {action}
       </div>
